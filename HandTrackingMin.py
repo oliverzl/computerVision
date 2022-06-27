@@ -16,7 +16,10 @@ cap = cv2.VideoCapture(0)
 
 mpHands = mp.solutions.hands
 # default parameters in .Hands()
-hands = mpHands.Hands()
+hands = mpHands.Hands(static_image_mode=False,
+               max_num_hands=4,
+               min_detection_confidence=0.5,
+               min_tracking_confidence=0.5)
 
 # to draw the connections between landmarks in hands
 mpDraw = mp.solutions.drawing_utils
