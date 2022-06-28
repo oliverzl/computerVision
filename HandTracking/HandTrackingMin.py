@@ -2,8 +2,10 @@ import cv2
 import mediapipe as mp
 import time
 
-# using our webcam
+# using the laptop's webcam
 cap = cv2.VideoCapture(0)
+
+print(type(cv2.VideoCapture))
 
 
 # create an object from class Hands
@@ -60,7 +62,7 @@ while True:
                 h, w, c = img.shape
                 # landmark.x * width, landmark.y * height
                 cx, cy = int(lm.x*w), int(lm.y*h)
-                print(id, cx, cy)
+                
                 if id == 0:
                     cv2.circle(img, (cx, cy), 15, (255, 0, 255), cv2.FILLED)
             mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)

@@ -7,20 +7,18 @@ import time
 
 # mpHands.Hands:
 # static_image_mode: False, so that class can detect keep tracking with a good tracking confidence. if tracking confidence drops below a certain range, it will stop tracking and perform detection. 
-# max_hands, min tracking confidence and min detection confidence
+# maximum amount of hands, min tracking confidence and min detection confidence
 
+# Class contains findHands and findPosition methods
 
-# basic parameters in the class for the hands
+# basic parameters in the class for the hands, all default values in this class definition.
 class handDetector():
     def __init__(self, mode=False, maxHands=4, detectionCon=0.5, trackCon=0.5):
         self.mode = mode
         self.maxHands = maxHands
         self.detectionCon = detectionCon
         self.trackCon = trackCon
-
         self.mpHands = mp.solutions.hands
-        # default parameters in .Hands()    
-        # hands = mpHands.Hands()
         self.hands = self.mpHands.Hands(self.mode, self.maxHands, self.detectionCon, self.trackCon)
         # to draw the connections between landmarks in hands
         self.mpDraw = mp.solutions.drawing_utils
@@ -32,7 +30,6 @@ class handDetector():
 
         # taking the converted image, process the frames for us, gives us the results
         self.results = self.hands.process(imgRGB)
-
     # checking if hand is detected or not
     # put in a FOR loop to check for multiple hands
         # results.multi_hands_landmarks means the results var detected hands:
@@ -47,7 +44,6 @@ class handDetector():
 
 
     def findPosition(self, img, handNo=0, draw=True):
-
         lmList = []
         # check if any hands were detected or not.
         # it will get the first hand, and within the hand, it gets all the landmarks and puts them in a list
@@ -61,11 +57,12 @@ class handDetector():
                 h, w, c = img.shape
                 # landmark.x * width, landmark.y * height
                 cx, cy = int(lm.x*w), int(lm.y*h)
-                # print(id, cx, cy)
+                # if id == 0:
+                #     print(id, cx, cy)
                 lmList.append([id, cx, cy])
                 if id == 0:
                     # if draw:
-                        cv2.circle(img, (cx, cy), 15, (255, 0, 255), cv2.FILLED)
+                    cv2.circle(img, (cx, cy), 7, (0, 0, 255), cv2.FILLED)
 
         return lmList
 
@@ -94,10 +91,7 @@ def main():
         cv2.waitKey(1)
 
 
-
-
 #if we are running this script, do this
 # whatever we write in the main() part, will be a dummy code that is used to showcase the features of the module
-
 if __name__ == "__main__":
     main()
