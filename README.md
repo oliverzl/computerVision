@@ -1,2 +1,1 @@
-# HandTracking
-Hand Tracking Project: Computer Vision, Python
+Computer vision with python
