@@ -27,12 +27,13 @@ while True:
             # mpDraw.draw_landmarks is in mp.solutions
             mpDraw.draw_landmarks(img, faceLms, mpFaceMesh.FACE_CONNECTIONS, drawSpec, drawSpec)
             # finding out all the different points
-            for lm in faceLms.landmark:
+            for id,lm in enumerate(faceLms.landmark):
                 # print(lm)
                 #image height, width, channels
                 ih, iw, ic = img.shape
                 x, y = int(lm.x*iw), int(lm.y*ih)
-                print(x, y)
+                print(id, x, y)
+                
     cTime = time.time()
     fps = 1/(cTime - pTime)
     pTime = cTime
@@ -40,3 +41,5 @@ while True:
     cv2.putText(img, f'FPS: {int(fps)}', (20,70), cv2.FONT_HERSHEY_PLAIN, 3, (0, 2555, 0), 3)
     cv2.imshow("Image", img)
     cv2.waitKey(1)
+
+

@@ -13,3 +13,5 @@ if static_image_mode is True, it will detect in every image. However, if it is f
 
 draw_landmarks: 
 we can see that we have the image, landmark_list, and the connections arguments:
+
+if results.multi_face_landmarks is the drawing function. 
