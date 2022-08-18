@@ -12,6 +12,8 @@ import time
 # Class contains findHands and findPosition methods
 
 # basic parameters in the class for the hands, all default values in this class definition.
+
+print("HandTrackingModule imported")
 class handDetector():
     def __init__(self, mode=False, maxHands=4, detectionCon=0.5, trackCon=0.5):
         self.mode = mode

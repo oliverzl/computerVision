@@ -1,0 +1,6 @@
+first thing we have to do for the module is to define what the file should do when we are running the module by itself.
+
+defining the main function below
+
+
+FaceMeshDetector class will have the FaceMesh class arguments inside the init, class arguments from the original FaceMesh
