@@ -1,10 +1,8 @@
-from xml.etree.ElementTree import TreeBuilder
 import cv2
 import mediapipe as mp
 import time
 
 cap = cv2.VideoCapture(0)
-pTime = 0
 
 # import mediapipe functions and classes
 # using mp faceDetection module:
@@ -16,6 +14,7 @@ faceDetection = mpFaceDetection.FaceDetection(0.75)
 
 while True:
     success, img = cap.read()
+    pTime = 0
 
     # images are defaulted to BGR, we need to convert it into RGB
     imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -38,8 +37,8 @@ while True:
             cv2.putText(img, f'{int(detection.score[0] * 100)}%', (bbox[0], bbox[1] -20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 255 ), 2)
 
     cTime = time.time()
-    fps = 1/(cTime-pTime)
+    fps = 1 / (cTime - pTime)
     pTime = cTime
-    cv2.putText(img, f'FPS: {int(fps)}', (20, 70), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0 ), 2)
+    cv2.putText(img, f"FPS: {int(fps)}", (20, 70), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0 ), 2)
     cv2.imshow("Image", img)
     cv2.waitKey(1)

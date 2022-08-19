@@ -2,7 +2,7 @@ import cv2
 import mediapipe as mp      
 import time
 
-print("Imported facemeshbasics")
+
 # getting the camera
 cap = cv2.VideoCapture(0)
 
