@@ -3,6 +3,18 @@
 
 
 
+
+
+
+
+
+
+
+
+
+# TIMESTAMP YT VIDEO 3:23:07
+
+
 # 1. importing cv2, time, and numpy after installing on pip
 import cv2
 import time
@@ -10,6 +22,12 @@ import numpy as np
 
 # 13. import math to use hypotenuse function to determine length between index and thumb.
 import math
+
+
+# 15. installing pycaw, this package can change the volume of the laptop based on the length of the distance of index and thumb tips.  
+from ctypes import cast, POINTER
+from comtypes import CLSCTX_ALL
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
 
 # 8. Importing the HandTrackingModule, this is an absolute import, to execute this file we run computerVision/VolumeHandControlRoot.py
@@ -34,20 +52,26 @@ pTime = 0
 detector = htm.handDetector(detectionCon=0.75)
 
 
-
+###################################################
 # 15. installing pycaw, this package can change the volume of the laptop based on the length of the distance of index and thumb tips.  
-from ctypes import cast, POINTER
-from comtypes import CLSCTX_ALL
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+################### INITIALISATION ##########################
 devices = AudioUtilities.GetSpeakers()
 interface = devices.Activate(
     IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
 volume = cast(interface, POINTER(IAudioEndpointVolume))
-volume.GetMute()
-volume.GetMasterVolumeLevel()
-volume.GetVolumeRange()
-volume.SetMasterVolumeLevel(-20.0, None)
+################### END OF INITIALISATION ##########################
 
+
+# volume.GetMasterVolumeLevel()
+
+# 16. minimum volume is -96.0, highest is 0.0, from these values we can get the volume range.
+volRange = volume.GetVolumeRange()
+minVol = volRange[0]
+maxVol = volRange[1]
+vol = 0
+volBar = 400
+volPer = 0
+###################################################
 
 while True:
     # 3. checking the success of the camera capturing any image
@@ -83,11 +107,32 @@ while True:
 
         # 13. figuring out length of the thumb and index
         length = math.hypot(x2 - x1, y2-y1)
-        print(length)
+        # print(length)
+
+        # 17. hand range is (20-40) - (200-250), we need to convert this into our volume range. volume range -96 - 0.
+        vol = np.interp(length, [25,250], [minVol, maxVol])
+        volBar = np.interp(length, [25,250], [400, 150])
+        volPer = np.interp(length, [25,250], [0, 100])
+
+
+
+        # 18. now, when the distance shrinks, vol decreases, and vice versa: vol constantly changes with regard to thumb and index finger distance. 
+        # EXTRA!!!! TRY TO SET A FIXED DISTANCE BETWEEN THUMB AND INDEX WITH VOLUME INSTEAD OF VARYING VALUES DEPENDING ON HOW CLOSE THE HAND IS TO THE CAMERA.
+        print(int(length), vol)
+        volume.SetMasterVolumeLevel(vol, None)
+
 
         # 14. determine the maximum and minimum length between thumb and index, and change the color of the circle when the length is below a certain value. 
         if length <20:
             cv2.circle(img, (cx, cy), 10, (0, 255, 0), cv2.FILLED)
+        
+    # 19. creating a rectangle for user experience.
+    cv2.rectangle(img, (50, 150), (85, 400), (255, 0, 0), 3)
+    cv2.rectangle(img, (50, int(volBar)), (85, 400), (255, 0, 0), cv2.FILLED)
+
+    # 19. Adding a percentage here.
+    cv2.putText(img, f"{int(volPer)} %", (40, 450), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 2)
+
 
     # 7. adding the framerate into the camera. 
     cTime = time.time()
